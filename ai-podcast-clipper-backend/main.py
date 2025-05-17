@@ -301,7 +301,7 @@ def process_clip(base_dir: str, original_video_path: str, s3_key: str, start_tim
 
     s3_client = boto3.client("s3")
     s3_client.upload_file(
-        subtitle_output_path, "ai-podcast-clipper", output_s3_key)
+        subtitle_output_path, "ai-podcast-clipper-hugo", output_s3_key)
 
 
 @app.cls(gpu="L40S", timeout=900, retries=0, scaledown_window=20, secrets=[modal.Secret.from_name("ai-podcast-clipper-secret")], volumes={mount_path: volume})
@@ -400,7 +400,7 @@ class AiPodcastClipper:
         # Download video file
         video_path = base_dir / "input.mp4"
         s3_client = boto3.client("s3")
-        s3_client.download_file("ai-podcast-clipper", s3_key, str(video_path))
+        s3_client.download_file("ai-podcast-clipper-hugo", s3_key, str(video_path))
 
         # 1. Transcription
         transcript_segments_json = self.transcribe_video(base_dir, video_path)
